@@ -1,0 +1,35 @@
+anitama:
+  url: https://app.anitama.net/rss/google
+  xpath: //div[@id="area-content-article"]
+
+maniahero:
+  url: http://www.maniahero.com/?feed=rss2
+  xpath: //div[@class="entry-content"]
+
+gamerboom:
+  url: http://gamerboom.com/feed
+  xpath: //div[@class="cnt_body"]
+
+youxiputao:
+  url: http://youxiputao.com/feed
+  xpath: //div[@class="info"]
+
+youxichaguan:
+  url: http://www.youxichaguan.com/rss.php
+  xpath: //div[@class="arc-article-detail"]
+
+jasondan:
+  url: http://www.cnblogs.com/jasondan/rss
+  xpath: //div[@id="cnblogs_post_body"]
+
+jiqizhixin:
+  url: http://www.jiqizhixin.com/rss
+  xpath: //div[@class="al-article-content"]
+
+9to5mac:
+  url: https://9to5mac.com/feed
+  xpath: //div[@class="post-body"]
+
+idownloadblog:
+  url: http://www.idownloadblog.com/feed
+  xpath: //div[@class="entry"]
