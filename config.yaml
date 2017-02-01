@@ -2,6 +2,10 @@ anitama:
   url: https://app.anitama.net/rss/google
   xpath: //div[@id="area-content-article"]
 
+bombdance:
+  url: http://feeds.feedburner.com/bombdance
+  xpath: //div[@class="post-body entry-content"]
+
 maniahero:
   url: http://www.maniahero.com/?feed=rss2
   xpath: //div[@class="entry-content"]
@@ -19,7 +23,7 @@ youxichaguan:
   xpath: //div[@class="arc-article-detail"]
 
 jasondan:
-  url: http://www.cnblogs.com/jasondan/rss
+  url: http://feed.cnblogs.com/blog/u/91938/rss
   xpath: //div[@id="cnblogs_post_body"]
 
 jiqizhixin:

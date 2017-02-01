@@ -19,30 +19,41 @@ class FeedBot(object):
             'Pragma': 'no-cache',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko',
             }
-        self.timeout = 10
         self.configs = {
             'embedded': False,
             'safe_attrs_only': True,
             'safe_attrs': ['src', 'href', 'height', 'width', 'alt'],
-            'remove_tags': ['span', 'br', 'ins'],
+            'remove_tags': ['span'],
         }
         self.hash = lambda x: xxhash.xxh64(x, seed=0x02).hexdigest()
         self.session = requests.Session()
         self.cleaner = clean.Cleaner(**self.configs)
 
-    def fetch(self, url, error=[]):
-        if len(error) == 3:
-            return '\n'.join(error)
+    def fetch(self, url, tries=1):
+        if tries > 10:
+            raise Exception
         else:
             print(url)
         try:
-            r = self.session.get(url, headers=self.headers, timeout=self.timeout)
+            r = self.session.get(url, headers=self.headers, timeout=tries*10)
             return r.content.decode(r.apparent_encoding)
-        except Exception as e:
-            error.append('<error>fetch url: {} {}</error>'.format(url, e))
-            return self.fetch(url, error=error)
+        except:
+            return self.fetch(url, tries=tries+1)
 
-    def process(self, url, xpath):
+    def extract(self, url, xpath):
+        cache = Path('.cache/{}'.format(self.hash(url)))
+        if cache.exists():
+            data = cache.open(encoding='utf-8').read()
+        else:
+            page = html.fromstring(self.fetch(url))
+            node = self.cleaner.clean_html(page.xpath(xpath)[0])
+            data = html.tostring(node, encoding='unicode')
+            data = re.sub(r'<(\w+)>\s*</\1>\n*', r'', data)
+            cache.open('w+', encoding='utf-8').write(data)
+        return etree.CDATA(data), self.hash(data)
+
+    def process(self, config):
+        name, url, xpath = config
         data = self.fetch(url)
         feed = etree.fromstring(data.encode('utf-8'), etree.XMLParser(recover=True))
         ns = {
@@ -66,41 +77,20 @@ class FeedBot(object):
                 continue
             for i in node.xpath('guid|description|content:encoded|atom:id|atom:summary|atom:content', namespaces=ns):
                 node.remove(i)
-            link = node.xpath('link/text()|atom:link/@href', namespaces=ns)[0]
+            link = node.xpath('link/text()|atom:link[@rel="alternate"]/@href', namespaces=ns)[0]
             content(node).text, guid(node).text = self.extract(link, xpath)
 
-        return etree.tostring(feed, encoding='unicode')
-
-    def extract(self, url, xpath):
-        cache = Path('.cache/{}'.format(self.hash(url)))
-        try:
-            if cache.exists():
-                data = cache.open(encoding='utf-8').read()
-            else:
-                page = html.fromstring(self.fetch(url))
-                node = self.cleaner.clean_html(page.xpath(xpath)[0])
-                data = re.sub(r'<p>\s*</p>\n*', r'', html.tostring(node, encoding='unicode'))
-                cache.open('w+', encoding='utf-8').write(data)
-        except Exception as e:
-            data = '<error>process page: {} {}</error>'.format(url, e)
-        return etree.CDATA(data), self.hash(data)
-
-    def wrapper(self, config):
-        name, url, xpath = config
-        try:
-            data = self.process(url, xpath)
-            open('{}.xml'.format(name), 'w+', encoding='utf-8').write(data)
-        except Exception as e:
-            print(url, e)
+        data = etree.tostring(feed, encoding='unicode')
+        open('{}.xml'.format(name), 'w+', encoding='utf-8').write(data)
 
 def main():
-    YAML = r'(.*?):\s*$\s*url:\s*(.*?)\s*$\s*xpath:\s*(.*?)\s*$'
+    YAML = r'^(.*?):\s*$\s*url:\s*(.*?)\s*$\s*xpath:\s*(.*?)\s*$'
 
     feedbot = FeedBot()
     configs = re.findall(YAML, open('config.yaml', encoding='utf-8').read(), re.MULTILINE)
 
     pool = Pool(4)
-    pool.map(feedbot.wrapper, configs)
+    pool.map(feedbot.process, configs)
     pool.close()
     pool.join()
 
