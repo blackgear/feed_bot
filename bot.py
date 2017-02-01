@@ -15,6 +15,7 @@ class FeedBot(object):
     def __init__(self):
         self.headers = {
             'Accept-Encoding': 'gzip,deflate',
+            'Accept-Language': 'zh-CN;q=1.0,*;q=0.5',
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko',

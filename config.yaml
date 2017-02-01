@@ -37,3 +37,7 @@ jiqizhixin:
 idownloadblog:
   url: http://www.idownloadblog.com/feed
   xpath: //div[@class="entry"]
+
+pixivision:
+  url: http://www.pixivision.net/zh/rss
+  xpath: //div[@class="am__body"]
