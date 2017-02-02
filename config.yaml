@@ -40,4 +40,4 @@ idownloadblog:
 
 pixivision:
   url: http://www.pixivision.net/zh/rss
-  xpath: //div[@class="am__body"]
+  xpath: //header[@class="am__header"]|//div[@class="am__body"]

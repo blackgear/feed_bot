@@ -25,10 +25,27 @@ class FeedBot(object):
             'safe_attrs_only': True,
             'safe_attrs': ['src', 'href', 'height', 'width', 'alt'],
             'remove_tags': ['span'],
-        }
-        self.hash = lambda x: xxhash.xxh64(x, seed=0x02).hexdigest()
+            }
+        self.pattern = re.compile('['
+            u'\U0001F600-\U0001F64F'
+            u'\U0001F300-\U0001F5FF'
+            u'\U0001F680-\U0001F6FF'
+            u'\U0001F1E0-\U0001F1FF'
+            ']+', flags=re.UNICODE)
+
+        self.hash = lambda x: xxhash.xxh64(x, seed=0x03).hexdigest()
         self.session = requests.Session()
         self.cleaner = clean.Cleaner(**self.configs)
+
+    def text(self, r):
+        encoding = r.headers.get('charset')
+        if not encoding:
+            encodings = requests.utils.get_encodings_from_content(r.text)
+            if encodings:
+                encoding = encodings[0]
+            else:
+                encoding = r.apparent_encoding
+        return self.pattern.sub('', r.content.decode(encoding))
 
     def fetch(self, url, tries=1):
         if tries > 10:
@@ -37,7 +54,7 @@ class FeedBot(object):
             print(url)
         try:
             r = self.session.get(url, headers=self.headers, timeout=tries*10)
-            return r.content.decode(r.apparent_encoding)
+            return self.text(r)
         except:
             return self.fetch(url, tries=tries+1)
 
@@ -47,9 +64,9 @@ class FeedBot(object):
             data = cache.open(encoding='utf-8').read()
         else:
             page = html.fromstring(self.fetch(url))
-            node = self.cleaner.clean_html(page.xpath(xpath)[0])
-            data = html.tostring(node, encoding='unicode')
-            data = re.sub(r'<(\w+)>\s*</\1>\n*', r'', data)
+            node = map(self.cleaner.clean_html, page.xpath(xpath))
+            data = map(lambda x: html.tostring(x, encoding='unicode'), node)
+            data = re.sub(r'<(\w+)>\s*</\1>\n*', r'', '\n'.join(data))
             cache.open('w+', encoding='utf-8').write(data)
         return etree.CDATA(data), self.hash(data)
 

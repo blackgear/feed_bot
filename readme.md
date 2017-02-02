@@ -27,16 +27,18 @@ feed_name:
 
 This bot will fetch feed from `feed_url`, fetch webpage and extract content with the `feed_xpath`, then save the feed file as `feed_name.xml`.
 
+If xpath matches multi content, all of them will be process and join together.
+
 Feed items which index larger than 10 and published longer than 1 day are removed for saving space.
 
 ## Crontab
 
-```
-*/20 * * * * cd /usr/share/nginx/feed/ && bot.py
-0 10 * * * cd /usr/share/nginx/feed/ && find .cache -atime +24h -delete
-```
-
 Here is an example that refresh the feed in every 20 minutes and clean up unused caches at 00:10 everyday.
+
+```
+*/20 * * * * cd /usr/share/nginx/feed/ && python3 bot.py
+0 10 * * * cd /usr/share/nginx/feed/ && find .cache -atime +1h -delete
+```
 
 ## LICENSE
 
