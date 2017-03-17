@@ -2,9 +2,17 @@ anitama:
   url: https://app.anitama.net/rss/google
   xpath: //div[@id="area-content-article"]
 
+pixivision:
+  url: http://www.pixivision.net/zh/rss
+  xpath: //img[@class="am__work__illust " or @class="aie__illust "]
+
 bombdance:
   url: http://feeds.feedburner.com/bombdance
   xpath: //div[@class="post-body entry-content"]
+
+sfoxstudio:
+  url: http://feeds.feedburner.com/sfoxstudio
+  xpath: //div[@class="entry-inner"]
 
 maniahero:
   url: http://www.maniahero.com/?feed=rss2
@@ -22,6 +30,18 @@ youxichaguan:
   url: http://www.youxichaguan.com/rss.php
   xpath: //div[@class="arc-article-detail"]
 
+gamasutra:
+  url: http://feeds.feedburner.com/GamasutraFeatureArticles/
+  xpath: //div[@class="item_body mobile_image_transform"]
+
+kotaku:
+  url: http://feeds.gawker.com/kotaku/full
+  xpath: //article[contains(@class, 'post')]
+
+wizards:
+  url: http://magic.wizards.com/en/rss/rss.xml?tags=Making%20Magic
+  xpath: //div[@id="content-detail-page-of-an-article"]
+
 jasondan:
   url: http://feed.cnblogs.com/blog/u/91938/rss
   xpath: //div[@id="cnblogs_post_body"]
@@ -29,6 +49,10 @@ jasondan:
 jiqizhixin:
   url: http://www.jiqizhixin.com/rss
   xpath: //div[@class="al-article-content"]
+
+qianduan:
+  url: https://www.qianduan.net/rss/
+  xpath: //section[@class="post-content"]
 
 9to5mac:
   url: https://9to5mac.com/feed
@@ -38,6 +62,6 @@ idownloadblog:
   url: http://www.idownloadblog.com/feed
   xpath: //div[@class="entry"]
 
-pixivision:
-  url: http://www.pixivision.net/zh/rss
-  xpath: //header[@class="am__header"]|//div[@class="am__body"]
+vice:
+  url: http://www.vice.cn/index/rss
+  xpath: //div[@class="article-body"]
