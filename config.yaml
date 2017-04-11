@@ -1,94 +1,109 @@
 anitama:
   url: https://app.anitama.net/rss/google
   xpath: //div[@id="area-content-article"]
-  fiximg: false
+  pic: default
 
 pixivision:
   url: http://www.pixivision.net/zh/rss
   xpath: //img[@class="am__work__illust " or @class="aie__illust "]
-  fiximg: true
+  pic: google
 
 bombdance:
   url: http://feeds.feedburner.com/bombdance
   xpath: //div[@class="post-body entry-content"]
-  fiximg: false
+  pic: default
 
 sfoxstudio:
   url: http://feeds.feedburner.com/sfoxstudio
   xpath: //div[@class="entry-inner"]/*[position()<last()-2]
-  fiximg: false
+  pic: default
 
 maniahero:
   url: http://www.maniahero.com/?feed=rss2
   xpath: //div[@class="entry-content"]
-  fiximg: false
+  pic: default
 
 gamerboom:
   url: http://gamerboom.com/feed
   xpath: //div[@class="cnt_body"]
-  fiximg: false
+  pic: default
 
 youxiputao:
   url: http://youxiputao.com/feed
   xpath: //div[@class="info"]
-  fiximg: false
+  pic: default
 
 youxichaguan:
   url: http://www.youxichaguan.com/rss.php
   xpath: //div[@class="arc-article-detail"]
-  fiximg: false
+  pic: default
 
 gamasutra:
   url: http://feeds.feedburner.com/GamasutraFeatureArticles/
   xpath: //div[@class="item_body mobile_image_transform"]
-  fiximg: false
+  pic: default
 
 kotaku:
   url: http://feeds.gawker.com/kotaku/full
   xpath: //div[@class="post-content entry-content js_entry-content "]
-  fiximg: false
+  pic: default
+
+glixel:
+  url: http://www.glixel.com/rss
+  xpath: //div[@class="article-content"]
+  pic: default
 
 wizards:
   url: http://magic.wizards.com/en/rss/rss.xml?tags=Making%20Magic
   xpath: //div[@id="content-detail-page-of-an-article"]
-  fiximg: false
+  pic: default
 
 jasondan:
   url: http://feed.cnblogs.com/blog/u/91938/rss
   xpath: //div[@id="cnblogs_post_body"]
-  fiximg: false
+  pic: default
 
 jiqizhixin:
   url: http://www.jiqizhixin.com/rss
   xpath: //div[@class="al-article-content"]
-  fiximg: false
+  pic: default
 
 qianduan:
   url: https://www.qianduan.net/rss
   xpath: //section[@class="post-content"]
-  fiximg: false
+  pic: default
 
 leavesongs:
   url: https://www.leavesongs.com/feed
   xpath: //div[@class="content"]
-  fiximg: false
+  pic: default
 
 9to5mac:
   url: https://9to5mac.com/feed
   xpath: //div[@class="post-body"]
-  fiximg: false
+  pic: default
 
 idownloadblog:
   url: http://www.idownloadblog.com/feed
   xpath: //div[@class="entry"]
-  fiximg: false
+  pic: default
 
 typeisbeautiful:
   url: http://www.typeisbeautiful.com/feed
   xpath: //div[@class="entry-content"]
-  fiximg: false
+  pic: default
 
 guancha:
   url: http://rss.guancha.cn/All.html
   xpath: //div[@class="content all-txt"]
-  fiximg: false
+  pic: default
+
+vice:
+  url: http://www.vice.cn/index/rss/
+  xpath: //div[@class="article-content"]
+  pic: default
+
+hacg:
+  url: http://www.hacg.wiki/wp/feed
+  xpath: //div[@class="entry-content"]
+  pic: default

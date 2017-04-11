@@ -1,4 +1,3 @@
-#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import re
@@ -33,7 +32,6 @@ class FeedBot(object):
             u'\U0001F680-\U0001F6FF'
             u'\U0001F1E0-\U0001F1FF'
             ']+', flags=re.UNICODE)
-        self.mask = 'https://images{}-focus-opensocial.googleusercontent.com/gadgets/proxy?url={}&container=focus'
         self.hash = lambda x: xxhash.xxh64(x, seed=0x04).hexdigest()
         self.session = requests.Session()
         self.cleaner = clean.Cleaner(**self.configs)
@@ -59,7 +57,14 @@ class FeedBot(object):
         except:
             return self.fetch(url, tries=tries+1)
 
-    def extract(self, url, xpath, fiximg):
+    def rewrite(self, url, pic):
+        if pic == 'google':
+            return 'https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?url={}&container=focus'.format(url)
+        if pic == 'weserv':
+            return 'https://images.weserv.nl/?url={}'.format(url.replace('https://', 'ssl:').replace('http：//', ''))
+        return url
+
+    def extract(self, url, xpath, pic):
         cache = Path('.cache/{}'.format(self.hash(url)))
         data = cache.open(encoding='utf-8').read() if cache.exists() else None
 
@@ -68,10 +73,9 @@ class FeedBot(object):
             page = html.fromstring(self.fetch(url), parser=parser)
             page.make_links_absolute(url)
 
-            for idx, node in enumerate(page.xpath('//img')):
+            for node in page.xpath('//img'):
                 link = urljoin(url, node.get('data-src') or node.get('src'))
-                link = self.mask.format(idx % 2, link) if fiximg == 'true' else link
-                node.set('src', link)
+                node.set('src', self.rewrite(link, pic))
 
             node = map(self.cleaner.clean_html, page.xpath(xpath))
             data = ''.join(map(lambda x: html.tostring(x, encoding='unicode'), node)).strip()
@@ -80,7 +84,7 @@ class FeedBot(object):
         return data, self.hash(data)
 
     def process(self, config):
-        name, url, xpath, fiximg = config
+        name, url, xpath, pic = config
         parser = etree.XMLParser(encoding='utf-8', recover=True, remove_comments=True, remove_blank_text=True)
         feed = etree.fromstring(self.fetch(url), parser=parser)
         ns = {
@@ -105,7 +109,7 @@ class FeedBot(object):
                 continue
             for i in node.xpath('guid|description|content:encoded|atom:id|atom:summary|atom:content', namespaces=ns):
                 node.remove(i)
-            content(node).text, guid(node).text = self.extract(urljoin(url, link[0]), xpath, fiximg)
+            content(node).text, guid(node).text = self.extract(urljoin(url, link[0]), xpath, pic)
 
         for node in feed.xpath('//*[@rel="hub"]|//item[./description/text()=""]|//atom:entry[./summary/text()=""]', namespaces=ns):
             node.getparent().remove(node)
@@ -114,7 +118,7 @@ class FeedBot(object):
         open('{}.xml'.format(name), 'w+', encoding='utf-8').write(data)
 
 def main():
-    YAML = r'^(.*?):\s*$\s*url:\s*(.*?)\s*$\s*xpath:\s*(.*?)\s*$\s*fiximg:\s*(.*?)\s*$'
+    YAML = r'^(.*?):\s*$\s*url:\s*(.*?)\s*$\s*xpath:\s*(.*?)\s*$\s*pic:\s*(.*?)\s*$'
 
     feedbot = FeedBot()
     configs = re.findall(YAML, open('config.yaml', encoding='utf-8').read(), re.MULTILINE)

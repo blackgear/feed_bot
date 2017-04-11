@@ -23,9 +23,12 @@ python3 bot.py
 feed_name:
   url: feed_url
   xpath: feed_xpath
+  pic: default|google|weserv
 ```
 
 This bot will fetch feed from `feed_url`, fetch webpage and extract content with the `feed_xpath`, then save the feed file as `feed_name.xml`.
+
+Any Image URL will be rewrite to use google or weserv image proxy if pic set to them.
 
 If xpath matches multi content, all of them will be process and join together.
 
