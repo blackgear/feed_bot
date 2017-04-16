@@ -5,8 +5,13 @@ anitama:
 
 pixivision:
   url: http://www.pixivision.net/zh/rss
-  xpath: //img[@class="am__work__illust " or @class="aie__illust "]
+  xpath: //a[div/img[@class="am__work__illust " or @class="aie__illust "]]
   pic: google
+
+hacg:
+  url: http://www.hacg.wiki/wp/feed
+  xpath: //div[@class="entry-content"]
+  pic: default
 
 bombdance:
   url: http://feeds.feedburner.com/bombdance
@@ -78,6 +83,11 @@ leavesongs:
   xpath: //div[@class="content"]
   pic: default
 
+yinwang:
+  url: http://feed43.com/6385828222086215.xml
+  xpath: //div[h2]
+  pic: default
+
 9to5mac:
   url: https://9to5mac.com/feed
   xpath: //div[@class="post-body"]
@@ -89,7 +99,7 @@ idownloadblog:
   pic: default
 
 typeisbeautiful:
-  url: http://www.typeisbeautiful.com/feed
+  url: http://feeds.feedburner.com/typeisbeautiful
   xpath: //div[@class="entry-content"]
   pic: default
 
@@ -103,7 +113,12 @@ vice:
   xpath: //div[@class="article-content"]
   pic: default
 
-hacg:
-  url: http://www.hacg.wiki/wp/feed
-  xpath: //div[@class="entry-content"]
+bbc:
+  url: http://feeds.bbci.co.uk/zhongwen/simp/rss.xml
+  xpath: //div[@property="articleBody"]
+  pic: default
+
+nytimes:
+  url: https://cn.nytimes.com/rss.html
+  xpath: //div[@id="content"]
   pic: default

@@ -2,7 +2,7 @@
 
 import re
 import time
-import xxhash
+import zlib
 import requests
 from lxml import etree, html
 from lxml.html import clean
@@ -32,7 +32,7 @@ class FeedBot(object):
             u'\U0001F680-\U0001F6FF'
             u'\U0001F1E0-\U0001F1FF'
             ']+', flags=re.UNICODE)
-        self.hash = lambda x: xxhash.xxh64(x, seed=0x04).hexdigest()
+        self.hash = lambda x: format(zlib.adler32(x.encode('utf-8'), 0x00), 'x')
         self.session = requests.Session()
         self.cleaner = clean.Cleaner(**self.configs)
 
